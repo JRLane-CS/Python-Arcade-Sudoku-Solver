@@ -27,15 +27,18 @@ The programming language used to create this program was Python. It was configur
 
 Here are a few websites which helped me understand how to utilize the Arcade library for Python:
 
-* [The Python Arcade Library (Documentation)](https://api.arcade.academy/en/latest/)
-* [Python Arcade - Basic Concepts (Tutorial Series)](https://www.youtube.com/playlist?list=PLP6KYkkXj-QbBP0He1Ot5wGgtPbR9hqxR)
+* [The Python Arcade Library (Documentation/Tutorial)](https://api.arcade.academy/en/latest/)
+* [Python Arcade - Basic Concepts (Video Tutorial Series)](https://www.youtube.com/playlist?list=PLP6KYkkXj-QbBP0He1Ot5wGgtPbR9hqxR)
 * [Paul Vincent Craven - Easy 2D Game Creation With Arcade](https://www.youtube.com/watch?v=DAWHMHMPVHU)
 
 # Future Work
 
 While the application is functional, in the future I'd like to expand the capabilities of the game. This will include:
 
-* Allow the game to load a puzzle (both incomplete and its solution)
-* Allow the game to save a puzzle (again, both incomplete and its solution)
-* Make playing Sudoku possible for the user, not just solving a puzzle
-* Create the ability to get hints regardless of whether the user plays it as a game or by inputting the puzzle insofar as he or she has 'solved' it and letting the game show the number which should go into a 'blank' space
+* Allowing the game to load a puzzle (both an incomplete puzzle and with its solution)
+* Allowing the game to save a puzzle (again, both an incomplete puzzle and with its solution)
+* Making it possible for the user to play a Sudoku game, not just automatically solving a puzzle
+* Permitting the user to 'reset' the puzzle to its beginning when playing to solve
+* Creating multiple difficulty levels for a user to play
+* Creating the ability for the user to get hints as he or she plays it 
+* Timing the user and setting up a 'High Scores' table based on difficulty and time to solution (Any hints given would invalidate the user appearing on the table)
