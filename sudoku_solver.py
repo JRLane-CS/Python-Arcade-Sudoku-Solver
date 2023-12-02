@@ -61,6 +61,9 @@ class Sudoku(arcade.Window):
         # add the solve puzzle location
         self.locations[number] = [400, 350, 615, 785]
 
+        # add the quit button location
+        self.locations[number + 1] = [100, 50, 615, 785]
+
         # set location border values
         self.border_display = False
         self.border_coords = None
@@ -215,7 +218,7 @@ class Sudoku(arcade.Window):
 
         # draw solve button
         arcade.draw_lrtb_rectangle_filled(615, 785, 400, 350, 
-                                     arcade.color.AMARANTH_PINK)
+                                     arcade.color.ANDROID_GREEN)
         arcade.Text("Solve Puzzle", 628, 368, arcade.color.BLACK, 18).draw()
 
         # draw true solve puzzle response 
@@ -249,6 +252,11 @@ class Sudoku(arcade.Window):
         # TODO create save button
 
         # TODO create load button
+
+        # draw quit button
+        arcade.draw_lrtb_rectangle_filled(615, 785, 100, 50, 
+                                     arcade.color.AMARANTH_PURPLE)
+        arcade.Text("Quit", 678, 68, arcade.color.WHITE, 18).draw()
         
         # draw cursor
         self.cursor_list.draw()
@@ -280,7 +288,7 @@ class Sudoku(arcade.Window):
                 self.selected_location = location
 
                 # if location is changable, set border display flag and coords
-                if location != 81:
+                if location != 81 and location != 82:
                     row = int(location / 9)
                     column = location % 9
                     if self.reference_puzzle[row][column] == 0:
@@ -295,6 +303,10 @@ class Sudoku(arcade.Window):
                 #  completed the puzzle to avoid conflicting messages
                 elif location == 81 and self.completed == False:
                     self.solve_puzzle = True
+
+                # if quit button is pressed, end application
+                elif location == 82:
+                    arcade.exit()
 
 
     # handle key presses
@@ -503,7 +515,7 @@ def solve_sudoku(puzzle, row = 0, column = 0):
 # main function to set the puzzle or simply start the game with its default
 def main():
 
-    # set a completed puzzle
+    # set a near-completed puzzle
     almost_completed_puzzle = [
         [1, 2, 3, 4, 5, 6, 7, 8, 0],
         [4, 5, 6, 7, 8, 9, 1, 2, 3],
@@ -516,7 +528,7 @@ def main():
         [9, 1, 8, 3, 4, 5, 6, 7, 2]
     ]
     
-    # set an unsolvable test puzzle
+    # set an unsolvable puzzle (the 2 at [7][2] is invalid)
     unsolvable_puzzle = [    
         [0, 2, 0, 0, 5, 0, 0, 8, 9],
         [0, 0, 6, 0, 8, 0, 0, 0, 3],
@@ -529,6 +541,19 @@ def main():
         [9, 1, 0, 3, 4, 5, 0, 7, 0]
     ]
 
+    # set a blank puzzle 
+    blank_puzzle = [    
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    
     # set a valid test puzzle
     test_puzzle = [
         [0, 2, 0, 0, 5, 0, 0, 8, 9],
@@ -543,7 +568,7 @@ def main():
     ]
     
     # create Sudoku object with test puzzle
-    game = Sudoku(test_puzzle)
+    game = Sudoku()
 
     # set up the game
     game.setup()
