@@ -288,7 +288,7 @@ class Sudoku(arcade.Window):
                 self.selected_location = location
 
                 # if location is changable, set border display flag and coords
-                if location != 81 and location != 82:
+                if location <= 80:
                     row = int(location / 9)
                     column = location % 9
                     if self.reference_puzzle[row][column] == 0:
