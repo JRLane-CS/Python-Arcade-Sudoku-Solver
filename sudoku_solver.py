@@ -2,27 +2,33 @@
 import arcade
 import os
 
-# set file path so arcade can find local cursor image
+# set file path so arcade can find local cursor image and siren sound
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
-# Sudoku game class for arcade visuals
+# Sudoku game class for arcade visuals and sounds
 class Sudoku(arcade.Window):
 
     # initialization function
     def __init__(self, puzzle = None):
 
-        # Call the parent class initializer
-        super().__init__(820, 600, "Sudoku", 
-                         resizable=True)
+        # Call the parent class initializer with window specifications
+        super().__init__(820, 600, "Sudoku", resizable=True)
 
         # declare cursor sprite list
         self.cursor_list = None
 
         # declare the cursor sprite
-        self.cursor_sprite = None
+        # hand image public domain from: 
+        # https://publicdomainvectors.org/en/free-clipart/Hand-cursor-vector-illustration/13428.html
+        self.cursor_sprite = arcade.Sprite("hand.png", 0.1)
+            
+        # declare siren variable
+        # siren clip public domain, downloaded from: 
+        # https://soundbible.com/search.php?q=bomb+siren
+        self.siren = arcade.sound.load_sound("short_siren.wav")
 
-        # hide the mouse cursor to use the sprite cursor
+        # hide the mouse cursor to use a sprite as cursor
         self.set_mouse_visible(False)
 
         # set the background color
@@ -77,16 +83,13 @@ class Sudoku(arcade.Window):
         self.completed = None
         self.user_solved = None
 
-        # create default puzzle location text array
+        # create default puzzle location text array, populate with text objects
         self.location_text = []
-        for i in range(81):
+        for _ in range(81):
             self.location_text.append(
                 arcade.Text(" ", 0, 0,
                 arcade.color.YANKEES_BLUE, 36    
                 ))
-            
-        # load siren courtesy of https://soundbible.com/search.php?q=bomb+siren
-        self.siren = arcade.sound.load_sound("short_siren.wav")
     
 
     # set initial game state
@@ -97,26 +100,23 @@ class Sudoku(arcade.Window):
         for row in self.reference_puzzle:
             self.puzzle.append(row.copy())
 
-        # set location border values
+        # set location initial border values
         self.border_display = False
         self.border_coords = None
 
-        # selected location value
+        # selected location initial value
         self.selected_location = None
 
-        # create variable to trigger solve puzzle
-        self.solve_puzzle = False
-        self.solved = False
-        self.completed = False
-        self.user_solved = False
+        # create variables to trigger solve puzzle, by application or user
+        self.solve_puzzle = False   # flag for application to solve puzzle
+        self.solved = False         # shows if puzzle was solved by application
+        self.completed = False      # shows if puzzle is user-completed
+        self.user_solved = False    # shows if user successfully solved puzzle
         
         # create cursor sprite list
         self.cursor_list = arcade.SpriteList()
         
-        # create the cursor sprite
-        # hand image public domain from: 
-        # https://publicdomainvectors.org/en/free-clipart/Hand-cursor-vector-illustration/13428.html
-        self.cursor_sprite = arcade.Sprite("hand.png", 0.1)
+        # create cursor starting point, add to sprite list
         self.cursor_sprite.center_x = 850
         self.cursor_sprite.center_y = 80
         self.cursor_list.append(self.cursor_sprite)
