@@ -6,11 +6,6 @@ import os
 file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
-# constants
-SCREEN_WIDTH = 820
-SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Sudoku"
-
 # Sudoku game class for arcade visuals
 class Sudoku(arcade.Window):
 
@@ -18,7 +13,7 @@ class Sudoku(arcade.Window):
     def __init__(self, puzzle = None):
 
         # Call the parent class initializer
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, 
+        super().__init__(820, 600, "Sudoku", 
                          resizable=True)
 
         # declare cursor sprite list
@@ -86,6 +81,9 @@ class Sudoku(arcade.Window):
                 arcade.Text(" ", 0, 0,
                 arcade.color.YANKEES_BLUE, 36    
                 ))
+            
+        # load siren courtesy of https://soundbible.com/search.php?q=bomb+siren
+        self.siren = arcade.sound.load_sound("short_siren.wav")
     
 
     # set initial game state
@@ -186,9 +184,9 @@ class Sudoku(arcade.Window):
 
                 # set the color of the text based on whether it can be changed
                 if self.reference_puzzle[r][c] != 0:
-                    color = arcade.color.RED
+                    color = arcade.color.YELLOW_ORANGE
                 else:
-                    color = arcade.color.YANKEES_BLUE
+                    color = arcade.color.YELLOW_GREEN
 
                 # update and draw the puzzle location text object                
                 self.location_text[location] = arcade.Text(
@@ -276,15 +274,21 @@ class Sudoku(arcade.Window):
                 # remember selected location
                 self.selected_location = location
 
-                # TODO if location cannot be changed, make sound
-
-                # TODO else, signal draw function to draw the border at border coords
-                self.border_display = True
-                self.border_coords = self.locations[location]
+                # if location is changable, set border display flag and coords
+                if location != 81:
+                    row = int(location / 9)
+                    column = location % 9
+                    if self.reference_puzzle[row][column] == 0:
+                        self.border_display = True
+                        self.border_coords = self.locations[location]
+                    
+                    # invalid selection, play siren
+                    else:
+                        arcade.sound.play_sound(self.siren)
 
                 # when user presses solve puzzle button verify user has not
                 #  completed the puzzle to avoid conflicting messages
-                if location == 81 and self.completed == False:
+                elif location == 81 and self.completed == False:
                     self.solve_puzzle = True
 
 
@@ -534,7 +538,7 @@ def main():
     ]
     
     # create Sudoku object with test puzzle
-    game = Sudoku(unsolvable_puzzle)
+    game = Sudoku(test_puzzle)
 
     # set up the game
     game.setup()
