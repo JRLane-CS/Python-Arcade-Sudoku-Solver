@@ -124,7 +124,12 @@ class Sudoku(arcade.Window):
        
         # if solve puzzle flag is set, solve the puzzle
         if self.solve_puzzle == True:
-           self.solved = solve_sudoku(self.puzzle)
+
+           # call solve_sudoku to automatically solve the puzzle, check result 
+            if solve_sudoku(self.puzzle) == True:
+                self.solved = puzzle_solved(self.puzzle)
+            else:
+               self.solved = False
 
         # check to see if the user has completed the puzzle and check if solved
         else:
@@ -397,7 +402,7 @@ def grids_solved(puzzle):
     return True
 
 
-# this function calls the rows, columns, and grids solved functions
+# this function checks the rows, columns, and grids for completeness
 def puzzle_solved(puzzle):
     
     # call rows_solved, columns_solved, and grids_solved, return results
@@ -462,7 +467,7 @@ def check_number_validity(puzzle, row, column, number):
 #  that can possibly go into a location one at a time until either the puzzle
 #  is solved or all number combinations have been exhausted
 def solve_sudoku(puzzle, row = 0, column = 0):
-       
+    
     # find next empty spot in puzzle
     get_next = next_empty(puzzle)
     
