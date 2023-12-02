@@ -5,7 +5,7 @@ The Python Arcade Sudoku Solver is an application which permits a user to input 
 
 ## Description
 
-The Python Arcade Sudoku Solver can be played as a standalone Sudoku game, or it can be used, as the name implies, as a means by which an incomplete Sudoku puzzle may be solved, with the solution displayed in the puzzle grid. The game remembers which numbers are original, thus preventing a player from attempting to change them. These numbers are all colored red as an indication of their permanent state. All empty puzzle locations are available to populate with the numbers 1 - 9 or to clear of a user-entered number by pressing the space bar. When a user clicks on a location in the puzzle, the location is highlighted, indicating it is waiting for input. A buzzer will sound should the user attempt to select one of the original, red, unchangeable numbers. 
+The Python Arcade Sudoku Solver can be played as a standalone Sudoku game, or it can be used, as the name implies, as a means by which an incomplete Sudoku puzzle may be solved, with the solution displayed in the puzzle grid. The game remembers which numbers are original, thus preventing a player from attempting to change them. These numbers are all colored red as an indication of their permanent state. All empty puzzle locations are available to populate with the numbers 1 through 9 by highlighting a location and using the keyboard to input the number or to clear a location of a user-entered number by pressing the space bar. When a user clicks on a location in the puzzle, the location is highlighted, indicating it is waiting for input. If the user has filled in all locations, the application checks to see if the puzzle is solved or if the solution is incorrect and displays the message. If the user has tried to solve a puzzle he or she has worked on and failed, or if they merely want to start over, the application allows for a puzzle reset to starting position by pressing the ESC key.
 
 ## Purpose
 
@@ -35,10 +35,9 @@ Here are a few websites which helped me understand how to utilize the Arcade lib
 
 While the application is functional, in the future I'd like to expand its capabilities. This will include:
 
-* Allowing the game to load a puzzle (both an incomplete puzzle and with its solution)
-* Allowing the game to save a puzzle (again, both an incomplete puzzle and with its solution)
-* Making it possible for the user to play a Sudoku game and have it automatically check to see if a filled-in puzzle is solved, not just automatically solve the puzzle for the user (logic is written, but commented out, so this one may come next)
-* Permitting the user to 'reset' the puzzle to its beginning when playing to solve
+* Allowing the game to load a puzzle 
+* Allowing the game to save a puzzle 
 * Creating multiple difficulty levels for a user to play
-* Creating the ability for the user to get hints as he or she plays it 
-* Timing the user and setting up a 'High Scores' table based on difficulty and time to solution (Any hints given would invalidate the user appearing on the table)
+* Creating an option for the application to help a user complete a puzzle by making a buzzing noise if he or she tries to insert an incorrect number into a location
+* Creating the ability for the user to get hints as he or she plays it by displaying small potential matches when the right mouse button is clicked in a location
+* Timing the user and setting up a 'High Scores' table based on difficulty and time to solution
