@@ -237,7 +237,7 @@ def main():
     ]
 
     # print guess of how long it will take
-    difficulty = determine_difficulty(hard_test_puzzle)
+    difficulty = determine_difficulty(test_puzzle)
     print(f"This puzzle is considered {difficulty[0]}.")
     print(f"It has {difficulty[1]} numbers in it.")
     if difficulty[1] < 35:

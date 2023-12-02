@@ -1,11 +1,11 @@
 # Python Arcade Sudoku Solver
 
 ## Overview
-The Python Arcade Sudoku Solver is an application which permits a user to input numbers into a 7 X 7 grid. Upon clicking the "Solve" button, the program will iterate through possible solutions until it either finds one or determines the puzzle cannot be solved.
+The Python Arcade Sudoku Solver is an application which permits a user to input numbers into a 9 X 9 puzzle grid. Upon clicking the "Solve" button, the program will iterate through possible solutions until it either finds one or determines the puzzle cannot be solved.
 
 ## Description
 
-{Provide a description of your app.  Describe how to use the app.}
+The Python Arcade Sudoku Solver can be played as a standalone Sudoku game, or it can be used, as the name implies, as a means by which an incomplete Sudoku puzzle may be solved, with the solution displayed in the puzzle grid. The game remembers which numbers are original, thus preventing a player from attempting to change them. These numbers are all colored red as an indication of their permanent state. All empty puzzle locations are available to populate with the numbers 1 - 9 or to clear of a user-entered number by pressing the space bar. When a user clicks on a location in the puzzle, the location is highlighted, indicating it is waiting for input. A buzzer will sound should the user attempt to select one of the original, red, unchangeable numbers. 
 
 ## Purpose
 
