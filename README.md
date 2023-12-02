@@ -33,11 +33,11 @@ Here are a few websites which helped me understand how to utilize the Arcade lib
 
 # Future Work
 
-While the application is functional, in the future I'd like to expand the capabilities of the game. This will include:
+While the application is functional, in the future I'd like to expand its capabilities. This will include:
 
 * Allowing the game to load a puzzle (both an incomplete puzzle and with its solution)
 * Allowing the game to save a puzzle (again, both an incomplete puzzle and with its solution)
-* Making it possible for the user to play a Sudoku game, not just automatically solving a puzzle
+* Making it possible for the user to play a Sudoku game and have it automatically check to see if a filled-in puzzle is solved, not just automatically solve the puzzle for the user (logic is written, but commented out, so this one may come next)
 * Permitting the user to 'reset' the puzzle to its beginning when playing to solve
 * Creating multiple difficulty levels for a user to play
 * Creating the ability for the user to get hints as he or she plays it 

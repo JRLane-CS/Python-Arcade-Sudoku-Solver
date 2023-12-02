@@ -10,7 +10,7 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(file_path)
 
 # constants
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 820
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sudoku"
 
@@ -34,26 +34,25 @@ class Sudoku(arcade.Window):
         # set the background color
         arcade.set_background_color(arcade.color.BEIGE)
 
-        # set the puzzle array
+        # set the reference puzzle array
         if puzzle != None:
-            self.puzzle = puzzle.copy()
+            self.reference_puzzle = []
+            for row in puzzle:
+                self.reference_puzzle.append(row.copy())
         else:
-            self.puzzle =  [
-                [9, 8, 7, 6, 5, 4, 3, 2, 1],
-                [2, 4, 6, 1, 7, 3, 9, 8, 5],
-                [3, 5, 1, 9, 2, 8, 7, 4, 6],
-                [1, 2, 8, 5, 3, 7, 6, 9, 4],
-                [6, 3, 4, 8, 9, 2, 1, 5, 7],
-                [7, 9, 5, 4, 6, 1, 8, 3, 2],
-                [5, 1, 9, 2, 8, 6, 4, 7, 3],
-                [4, 7, 2, 3, 1, 9, 5, 6, 8],
-                [8, 6, 3, 7, 4, 5, 2, 1, 9]
+            self.reference_puzzle =  [
+                [0, 2, 0, 0, 5, 0, 0, 8, 9],
+                [0, 0, 6, 0, 8, 0, 0, 0, 3],
+                [7, 0, 0, 0, 0, 3, 4, 5, 0],
+                [2, 0, 0, 0, 0, 7, 0, 0, 1],
+                [5, 6, 0, 0, 9, 0, 2, 0, 0],
+                [8, 0, 1, 2, 0, 4, 0, 6, 0],
+                [0, 0, 0, 6, 0, 8, 9, 1, 0],
+                [0, 7, 0, 0, 0, 0, 3, 4, 0],
+                [9, 1, 0, 3, 4, 5, 0, 7, 0]
             ]
 
-        # set reference puzzle (so only values of 0 can be changed)
-        self.reference_puzzle = []
-        for row in puzzle:
-            self.reference_puzzle.append(row.copy())
+        self.puzzle = None
         
         # set location variable defaults
         self.locations = {}
@@ -65,13 +64,20 @@ class Sudoku(arcade.Window):
                 self.locations[number] = [y + 64, y, x, x + 64] 
                 number += 1
 
+        # add the solve puzzle location
+        self.locations[number] = [400, 350, 615, 785]
+
         # set location border values
         self.border_display = False
         self.border_coords = None
 
-        # selected values
+        # selected location value
         self.selected_location = None
-        
+
+        # create variable to trigger solve puzzle
+        self.solve_puzzle = False
+        self.solved = None
+
         # create default puzzle location text array
         self.location_text = []
         for i in range(81):
@@ -83,6 +89,22 @@ class Sudoku(arcade.Window):
 
     # set initial game state
     def setup(self):
+        
+        # set working puzzle 
+        self.puzzle = []
+        for row in self.reference_puzzle:
+            self.puzzle.append(row.copy())
+
+        # set location border values
+        self.border_display = False
+        self.border_coords = None
+
+        # selected location value
+        self.selected_location = None
+
+        # create variable to trigger solve puzzle
+        self.solve_puzzle = False
+        self.solved = None
         
         # create cursor sprite list
         self.cursor_list = arcade.SpriteList()
@@ -97,7 +119,10 @@ class Sudoku(arcade.Window):
         
     # TODO put game logic here during update
     def on_update(self, delta_time):
-        pass
+       
+       # if solve puzzle flag is set, solve the puzzle
+       if self.solve_puzzle == True:
+           self.solved = solve_sudoku(self.puzzle)
     
     # function to draw the window with its elements
     def on_draw(self):
@@ -161,7 +186,19 @@ class Sudoku(arcade.Window):
             arcade.draw_line(stop_x, start_y, stop_x, stop_y, 
                              arcade.color.RED_PURPLE, 2)
 
-        # TODO create solve button
+        # draw solve button
+        arcade.draw_lrtb_rectangle_filled(615, 785, 400, 350, 
+                                     arcade.color.AMARANTH_PINK)
+        arcade.Text("Solve Puzzle", 628, 368, arcade.color.BLACK, 18).draw()
+
+        # draw solve puzzle response
+        if self.solve_puzzle == True and self.solved == True:
+            arcade.Text("Puzzle Solved!", 620, 320, 
+                        arcade.color.AMAZON, 18).draw()
+        elif self.solve_puzzle == True and self.solved == False:
+            arcade.Text("Puzzle Unsolvable!", 600, 320, 
+                        arcade.color.RASPBERRY_ROSE, 18).draw()
+            
 
         # TODO create save button
 
@@ -203,9 +240,17 @@ class Sudoku(arcade.Window):
                 self.border_coords = self.locations[location]
 
 
+                if location == 81:
+                    self.solve_puzzle = True
+
+
     # handle key presses
     def on_key_press(self, symbol, modifiers):
-        
+       
+        # in case user tries to change something after a failed solve,
+        #  unset the solve puzzle flag
+        self.solve_puzzle = False
+
         # if user has selected a location and valid 1-9 number input
         if self.selected_location != None and \
             ((symbol >= 48 and symbol <= 57) or symbol == 32):
@@ -227,22 +272,207 @@ class Sudoku(arcade.Window):
             self.border_display = False
             self.border_coords = None
 
-        # TODO elif allow for a reset option here
+        # reset game when user presses the ESC key
+        elif symbol == 65307:
+            self.setup()
+
+##### Funtions to be used to check for puzzle solved by user #####
+# # function to see if the rows are solved
+# def rows_solved(puzzle):
+
+#     # loop through each row
+#     for row in range(9):
+
+#         # verify numbers 1 through 9 are in the row or return false
+#         for number in range(9):
+#             if number + 1 not in puzzle[row]:
+#                 return False
+            
+#     # if above passed, then rows are complete
+#     return True
 
 
+# # function to see if the columns are solved
+# def columns_solved(puzzle):
+    
+#     # loop through all rows and get column values
+#     for column in range(9):
+
+#         # start with empty array and add column values from each row to it
+#         column_array = []
+#         for row in range(9):
+#             column_array.append(puzzle[row][column])
+
+#         # verify all numbers match 1 through 9 or return false    
+#         for number in range(9):
+#             if number + 1 not in column_array:
+#                 return False
+            
+#     # if above passed, then columns are complete
+#     return True
+
+
+# # function to see if the grids are solved
+# def grids_solved(puzzle):
+    
+#     # set defaults
+#     columns = [0, 3, 6]
+#     rows = [0, 3, 6]
+#     row_number = 0
+    
+#     # loop through each of the nine mini-grids
+#     for grid in range(9):
+
+#         # clear the array for appending grid values
+#         grid_array = []
+
+#         # determine which column values are to be added to array
+#         column_number = columns[grid % 3]
+
+#         # loop through each row and append column values to the grid array
+#         for row in range(row_number, row_number + 3):
+#             for column in range(column_number, column_number + 3):
+#                 grid_array.append(puzzle[row][column])
+
+#         # verify numbers 1 through 9 are in the array or return false
+#         for number in range(9):
+#             if number + 1 not in grid_array:
+#                 return False
+            
+#         # if the grid is evenly divisible by 3, increase row number to get
+#         # the next set of 3 grids
+#         if (grid + 1) % 3 == 0:
+#             row_number += 3
+
+#     # if all the checks above passed, then the grids are complete
+#     return True
+
+
+# # this function calls the rows, columns, and grids solved functions
+# def puzzle_solved(puzzle):
+    
+#     # call rows_solved, columns_solved, and grids_solved, return results
+#     return rows_solved(puzzle) and columns_solved(puzzle) and grids_solved(puzzle)
+        
+
+##### Functions used to automatically solve a Sudoku puzzle #####
+# this function is a helper for solve_puzzle and finds the next empty location
+def next_empty(puzzle):
+    
+    # loop through all the locations in the puzzle to find the next empty place
+    # if found, return location as row, column tuple, if not, return 0, 0 tuple
+    for r, row in enumerate(puzzle):
+        for column in range(len(row)):
+            if row[column] == 0:
+                return (r, column)
+            
+    # the puzzle is solved, send back nonexistent coordinates to indicate this
+    return (10, 10) 
+
+
+# a helper function for solve_puzzle and checks if a number is valid for a row
+def valid_for_row(puzzle, row, number):
+    return not number in puzzle[row]
+
+
+# a helper function for solve_puzzle and checks if number is valid for a column
+def valid_for_column(puzzle, column, number):
+    for row in puzzle:
+        if number == row[column]:
+            return False
+    return True
+
+
+# a helper function for solve_puzzle, checks if a number is valid for a grid
+def valid_for_grid(puzzle, row, column, number):
+    
+    # set row and column start and stop points for correct grid
+    row_start = int((row) / 3) * 3
+    row_end = row_start + 3
+    column_start = int((column) / 3) * 3
+    column_end = column_start + 3
+
+    # loop through the grid and ensure the number is not in it
+    for row in range(row_start, row_end):
+        for column in range(column_start, column_end):
+            if number == puzzle[row][column]:
+                return False
+            
+    # if the number was not in the grid, return true
+    return True
+
+
+# a helper function for solve_puzzle calls valid for row, column, and grid
+def check_number_validity(puzzle, row, column, number):
+    return valid_for_row(puzzle, row, number) \
+       and valid_for_column(puzzle, column, number) \
+       and valid_for_grid(puzzle, row, column, number)
+    
+
+# this function uses recursion to solve the sudoku puzzle by using all numbers
+#  that can possibly go into a location one at a time until either the puzzle
+#  is solved or all number combinations have been exhausted
+def solve_sudoku(puzzle, row = 0, column = 0):
+       
+    # find next empty spot in puzzle
+    get_next = next_empty(puzzle)
+    
+    # if get next is (10, 10), the puzzle is solved
+    if get_next == (10, 10):
+        return True
+    
+    # else, continue trying to solve it
+    else:
+
+        row = get_next[0]
+        column = get_next[1]
+
+        for number in range(1, 10):
+            if check_number_validity(puzzle, row, column, number):
+
+                # attempt to assign the number
+                puzzle[row][column] = number
+
+                # if the statement is true, the puzzle is solved
+                if solve_sudoku(puzzle, row, column):
+                    return True
+                
+                else:
+                    
+                    # show row, column location as empty again
+                    puzzle[row][column] = 0
+            
+        # the number failed, so return to try the next or puzzle is unsolvable
+        return False
+
+
+# main function to set the puzzle or simply start the game with its default
 def main():
     
-    # set a default test puzzle
-    test_puzzle = [    
-        [0, 0, 0, 0, 5, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 8, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 4, 0, 3],
-        [0, 0, 2, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 5, 0, 0, 9]
+    # set an unsolvable test puzzle
+    unsolvable_puzzle = [    
+        [0, 2, 0, 0, 5, 0, 0, 8, 9],
+        [0, 0, 6, 0, 8, 0, 0, 0, 3],
+        [7, 0, 0, 0, 0, 3, 4, 5, 0],
+        [2, 0, 0, 0, 0, 7, 0, 0, 1],
+        [5, 6, 0, 0, 9, 0, 2, 0, 0],
+        [8, 0, 1, 2, 0, 4, 0, 6, 0],
+        [0, 0, 0, 6, 0, 8, 9, 1, 0],
+        [0, 7, 2, 0, 0, 0, 3, 4, 0],
+        [9, 1, 0, 3, 4, 5, 0, 7, 0]
+    ]
+
+    # set a valid test puzzle
+    test_puzzle = [
+        [0, 2, 0, 0, 5, 0, 0, 8, 9],
+        [0, 0, 6, 0, 8, 0, 0, 0, 3],
+        [7, 0, 0, 0, 0, 3, 4, 5, 0],
+        [2, 0, 0, 0, 0, 7, 0, 0, 1],
+        [5, 6, 0, 0, 9, 0, 2, 0, 0],
+        [8, 0, 1, 2, 0, 4, 0, 6, 0],
+        [0, 0, 0, 6, 0, 8, 9, 1, 0],
+        [0, 7, 0, 0, 0, 0, 3, 4, 0],
+        [9, 1, 0, 3, 4, 5, 0, 7, 0]
     ]
     
     # create Sudoku object with test puzzle
@@ -255,5 +485,6 @@ def main():
     arcade.run()
 
 
+# if the program is run directly, call main
 if __name__ == "__main__":
     main()
