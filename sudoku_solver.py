@@ -129,21 +129,23 @@ class Sudoku(arcade.Window):
            self.solved = solve_sudoku(self.puzzle)
 
         # check to see if the user has completed the puzzle and check if solved
-        # assume user has completed the puzzle
-        self.completed = True
-        
-        # loop through columns and rows to see if there are any zeroes, if not
-        #  the puzzle has been completed, so check to see if it is solved
-        for column in range(9):
-            column_list = []
-            for row in self.puzzle:
-                if 0 in row:
+        else:
+
+            # assume user has completed the puzzle
+            self.completed = True
+            
+            # loop through columns and rows to see if there are any zeroes, if not
+            #  the puzzle has been completed, so check to see if it is solved
+            for column in range(9):
+                column_list = []
+                for row in self.puzzle:
+                    if 0 in row:
+                        self.completed = False
+                    column_list.append(row[column])
+                if 0 in column_list:
                     self.completed = False
-                column_list.append(row[column])
-            if 0 in column_list:
-                self.completed = False
-        if self.completed == True and self.solve_puzzle == False:
-            self.user_solved = puzzle_solved(self.puzzle)
+            if self.completed == True and self.solve_puzzle == False:
+                self.user_solved = puzzle_solved(self.puzzle)
     
     
     # function to draw the window with its elements
@@ -213,27 +215,28 @@ class Sudoku(arcade.Window):
                                      arcade.color.AMARANTH_PINK)
         arcade.Text("Solve Puzzle", 628, 368, arcade.color.BLACK, 18).draw()
 
-        # draw solve puzzle response
+        # draw true solve puzzle response 
         if self.solve_puzzle == True and \
             self.solved == True and \
             self.completed == False:
             arcade.Text("Puzzle Solved!", 620, 320, 
                         arcade.color.AMAZON, 18).draw()
-            print()
-            for row in self.puzzle:
-                print(row)
+        
+        # draw false solve puzzle response
         elif self.solve_puzzle == True and \
             self.solved == False and \
             self.completed == False:
             arcade.Text("Puzzle Unsolvable!", 600, 320, 
                         arcade.color.RASPBERRY_ROSE, 18).draw()
             
-        # draw user completed puzzle response
+        # draw true user completed puzzle response
         if self.completed == True and \
             self.user_solved == True and \
             self.solve_puzzle == False:
             arcade.Text("Puzzle Solved!", 620, 320, 
                         arcade.color.AMAZON, 18).draw()
+        
+        # draw false user completed response
         elif self.completed == True and \
             self.user_solved == False and \
             self.solve_puzzle == False:
