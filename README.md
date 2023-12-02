@@ -39,5 +39,6 @@ While the application is functional, in the future I'd like to expand its capabi
 * Allowing the game to save a puzzle 
 * Creating multiple difficulty levels for a user to play
 * Creating an option for the application to help a user complete a puzzle by making a buzzing noise if he or she tries to insert an incorrect number into a location
+* Creating a 'history' ability, where the user can 'go back' or 'go forward' in the puzzle
 * Creating the ability for the user to get hints as he or she plays it by displaying small potential matches when the right mouse button is clicked in a location
 * Timing the user and setting up a 'High Scores' table based on difficulty and time to solution
