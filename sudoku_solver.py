@@ -19,7 +19,8 @@ class Sudoku(arcade.Window):
     def __init__(self, puzzle = None):
 
         # Call the parent class initializer
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, 
+                         resizable=True)
 
         # declare cursor sprite list
         self.cursor_list = None
@@ -94,33 +95,55 @@ class Sudoku(arcade.Window):
         self.cursor_sprite.center_y = 80
         self.cursor_list.append(self.cursor_sprite)
         
-
+    # TODO put game logic here during update
+    def on_update(self, delta_time):
+        pass
+    
+    # function to draw the window with its elements
     def on_draw(self):
         
-        # prepare for drawing
+        # prepare for drawing by clearing earlier drawings
         self.clear()
 
-        # draw sudoku board
+        # draw sudoku board locations
         for y in range(532, 2, -66):
             for x in range(3, 596, 66):
-                arcade.draw_lrtb_rectangle_filled(x, x + 64, y + 64, y, arcade.color.AMAZON)
+                arcade.draw_lrtb_rectangle_filled(x, x + 64, y + 64, y, 
+                    arcade.color.AMAZON)
+        
+        # draw the 3 X 3 grid boundaries
         arcade.draw_line(2, 200, 595, 200, arcade.color.BLACK_BEAN, 2)
         arcade.draw_line(2, 398, 595, 398, arcade.color.BLACK_BEAN, 2)
         arcade.draw_line(200, 3, 200, 596, arcade.color.BLACK_BEAN, 2)
         arcade.draw_line(398, 3, 398, 596, arcade.color.BLACK_BEAN, 2)
 
         # draw puzzle numbers onto board using puzzle array rows and columns
+        # loop through all rows and columns of the puzzle
         for r, row in enumerate(self.puzzle):
             for c in range(len(row)):
+
+                # calculate the puzzle location
                 location = r * 9 + c
+
+                # get x, y coords from the locations dictionary
                 x = self.locations[location][2] + 17
                 y = self.locations[location][0] - 49
+
+                # set the output text of location
                 if self.puzzle[r][c] != 0:
                     output = str(self.puzzle[r][c])
                 else:
-                    output = " "                
+                    output = " " 
+
+                # set the color of the text based on whether it can be changed
+                if self.reference_puzzle[r][c] != 0:
+                    color = arcade.color.RED
+                else:
+                    color = arcade.color.YANKEES_BLUE
+
+                # update and draw the puzzle location text object                
                 self.location_text[location] = arcade.Text(
-                output, x, y, arcade.color.YANKEES_BLUE, 36)
+                output, x, y, color, 36)
                 self.location_text[location].draw()
 
         # if a location is selected, draw the border
@@ -129,11 +152,21 @@ class Sudoku(arcade.Window):
             start_y = self.border_coords[1]
             stop_x = self.border_coords[3]
             stop_y = self.border_coords[0]
-            arcade.draw_line(start_x, start_y, stop_x, start_y, arcade.color.RED_PURPLE, 2)
-            arcade.draw_line(start_x, stop_y, stop_x, stop_y, arcade.color.RED_PURPLE, 2)
-            arcade.draw_line(start_x, start_y, start_x, stop_y, arcade.color.RED_PURPLE, 2)
-            arcade.draw_line(stop_x, start_y, stop_x, stop_y, arcade.color.RED_PURPLE, 2)
+            arcade.draw_line(start_x, start_y, stop_x, start_y, 
+                             arcade.color.RED_PURPLE, 2)
+            arcade.draw_line(start_x, stop_y, stop_x, stop_y, 
+                             arcade.color.RED_PURPLE, 2)
+            arcade.draw_line(start_x, start_y, start_x, stop_y, 
+                             arcade.color.RED_PURPLE, 2)
+            arcade.draw_line(stop_x, start_y, stop_x, stop_y, 
+                             arcade.color.RED_PURPLE, 2)
 
+        # TODO create solve button
+
+        # TODO create save button
+
+        # TODO create load button
+        
         # draw cursor
         self.cursor_list.draw()
 
@@ -163,7 +196,9 @@ class Sudoku(arcade.Window):
                 # remember selected location
                 self.selected_location = location
 
-                # signal draw function to draw the border at border coords
+                # TODO if location cannot be changed, make sound
+
+                # TODO else, signal draw function to draw the border at border coords
                 self.border_display = True
                 self.border_coords = self.locations[location]
 
@@ -183,7 +218,7 @@ class Sudoku(arcade.Window):
             if symbol == 32 and self.reference_puzzle[row][column] == 0:
                 self.puzzle[row][column] = 0
 
-            # change location value if location not already in the reference puzzle
+            # change location value if available in the reference puzzle
             elif self.reference_puzzle[row][column] == 0:    
                 self.puzzle[row][column] = symbol - 48
 
