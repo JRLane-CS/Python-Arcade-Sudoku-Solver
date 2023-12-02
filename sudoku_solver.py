@@ -109,9 +109,9 @@ class Sudoku(arcade.Window):
 
         # create variables to trigger solve puzzle, by application or user
         self.solve_puzzle = False   # flag for application to solve puzzle
-        self.solved = False         # shows if puzzle was solved by application
-        self.completed = False      # shows if puzzle is user-completed
-        self.user_solved = False    # shows if user successfully solved puzzle
+        self.solved = False         # flag for puzzle was solved by application
+        self.completed = False      # flag for puzzle is user-completed
+        self.user_solved = False    # flag for user successfully solved puzzle
         
         # create cursor sprite list
         self.cursor_list = arcade.SpriteList()
