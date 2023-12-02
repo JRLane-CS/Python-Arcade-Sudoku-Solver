@@ -273,6 +273,11 @@ class Sudoku(arcade.Window):
     # actions to take when user presses the mouse buttons
     def on_mouse_press(self, x, y, button, modifiers):
 
+        # if right mouse button is pressed, clear highlight box
+        if button == 4:
+            self.border_display = False
+            return
+        
         # adjust for drawn rectangle and cursor center coordinates offset value
         y += 26
         x -= 6
