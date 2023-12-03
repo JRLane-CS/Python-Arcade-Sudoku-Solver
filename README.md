@@ -15,7 +15,7 @@ Over the years, I have worked on many, many Sudoku puzzles. Too often, I have be
 
 The following is a video demonstration of the application functioning and a code walkthrough:
 
-[Python Arcade Sudoku Solver Demo](http://youtube.link.goes.here)
+[Python Arcade Sudoku Solver Demo](https://youtu.be/wlZwgTmL5iw)
 
 # Development Environment
 
