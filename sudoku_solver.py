@@ -347,7 +347,7 @@ class Sudoku(arcade.Window):
             self.setup()
 
 
-##### Funtions to be used to check for puzzle solved by user #####
+##### Funtions to be used to check for puzzle solved #####
 # function to see if the rows are solved
 def rows_solved(puzzle):
 
@@ -431,13 +431,13 @@ def puzzle_solved(puzzle):
 def next_empty(puzzle):
     
     # loop through all the locations in the puzzle to find the next empty place
-    # if found, return location as row, column tuple, if not, return 0, 0 tuple
+    # if found, return location as row, column tuple
     for r, row in enumerate(puzzle):
         for column in range(len(row)):
             if row[column] == 0:
                 return (r, column)
             
-    # the puzzle is solved, send back nonexistent coordinates to indicate this
+    # if not, the puzzle is solved, send back nonexistent coordinates 
     return (10, 10) 
 
 
@@ -495,10 +495,14 @@ def solve_sudoku(puzzle, row = 0, column = 0):
     # else, continue trying to solve it
     else:
 
+        # assign the tuple values from the next_empty function
         row = get_next[0]
         column = get_next[1]
 
+        # cycle through all the possible numbers for a location
         for number in range(1, 10):
+
+            # if the number if valid, assign it
             if check_number_validity(puzzle, row, column, number):
 
                 # attempt to assign the number
